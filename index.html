@@ -1,12 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <title>Password Generator</title>
 </head>
+
 <body>
-    <h1>Password Generator</h1>
+    <div class="h-screen items-center justify-center flex flex-col space-y-4 bg-gray-800">
+        <div class="bg-white rounded-full p-3 shadow-lg w-1/3 text-3xl text-gray-700 text-center font-bold select-all"
+            id="password_field">
+        </div>
+        <button class="px-7 py-1 rounded-full text-xl focus:outline-none bg-indigo-500"
+            onclick="copy_and_generate()">copy</button>
+    </div>
+    <script>
+        const snippet_length = 6
+        const snippets = 3
+        const delimiter = "-"
+
+        function new_char() {
+            const lower_case = "abcdefghijklmnopqrstuvwxyz"
+            const upper_case = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+            let val = Math.random()
+            if (val < 0.7) {
+                return lower_case[Math.floor(Math.random() * lower_case.length)]
+            } else if (val < 0.85) {
+                return upper_case[Math.floor(Math.random() * upper_case.length)]
+            } else {
+                return Math.floor(Math.random() * 9)
+            }
+        }
+
+        function new_snippet() {
+            let snippet = ""
+
+            for (let i = 0; i < snippet_length; i++)
+                snippet += new_char()
+
+            return snippet
+        }
+
+        function new_password() {
+            let password = new_snippet()
+
+            for (let i = 0; i < snippets - 1; i++){
+                password += delimiter
+                password += new_snippet()
+            }
+
+            console.log(password)
+            return password
+        }
+
+        function set_password(password) {
+            document.getElementById("password_field").innerHTML = password
+        }
+
+        function copy_and_generate() {
+            let current_password = document.getElementById("password_field").innerHTML
+
+            navigator.clipboard.writeText(current_password).then(function () {
+                //alert("Copied to clipboard!")
+            }, function () {
+                alert("Could not copy to clipboard!")
+            });
+
+            set_password(new_password())
+        }
+
+        set_password(new_password())
+    </script>
 </body>
+
 </html>
